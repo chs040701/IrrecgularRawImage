@@ -15,9 +15,10 @@ public class IrregularVertControllerEditor : Editor
     private IrregularRawImage m_img;
     // Start is called before the first frame update
     protected void OnEnable()
-    {
+    { 
+        //Debug.LogError(serializedObject); 
         this.m_VecContent = new GUIContent("point");
-        m_index = serializedObject.FindProperty("index");
+        m_index = serializedObject.FindProperty("idx");
         m_Vec = serializedObject.FindProperty("vec");
         m_target = (target as IrregularVertController);
         m_img = m_target.transform.GetComponent<IrregularRawImage>();

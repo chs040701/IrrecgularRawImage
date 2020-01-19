@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System.Linq;
 using System;
@@ -8,7 +9,7 @@ public class IrregularRawImage : RawImage, ICanvasRaycastFilter
 {
     public bool doPolygonUpdate = false;
     [SerializeField]
-    public Vector4[] path;
+    public List<Vector4> path = new List<Vector4>();
     public Vector2[] pathCore;
     [SerializeField]
     public bool keepOriginSize = false;
@@ -26,6 +27,17 @@ public class IrregularRawImage : RawImage, ICanvasRaycastFilter
         OnColliderUpdate();
         base.Start();
     }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        RegisterDirtyMaterialCallback(OnRectTransformDimensionsChange);
+    }
+    protected override void OnDisable()
+    {
+        UnregisterDirtyLayoutCallback(OnRectTransformDimensionsChange);
+        base.OnDisable();
+    }
     protected override void OnPopulateMesh(VertexHelper vh)
     {
         if (!IsActive() || verts == null || verts.Count<3)
@@ -39,7 +51,7 @@ public class IrregularRawImage : RawImage, ICanvasRaycastFilter
 
     public void OnColliderUpdate()
     {
-        if (path.Length < 3)
+        if (path.Count < 3)
             return;
         Rect rect = rectTransform.rect;
         pathCore = path.Select(v =>
@@ -56,7 +68,12 @@ public class IrregularRawImage : RawImage, ICanvasRaycastFilter
         }).ToArray()
         );
         indices = new List<int>(new Triangulator(pathCore).Triangulate());
-
+        //string str = "";
+        //foreach(var i in indices)
+        //{
+        //    str += i + " ";
+        //}
+        //Debug.Log(str);
         SetVerticesDirty();
     }
 
@@ -76,7 +93,7 @@ public class IrregularRawImage : RawImage, ICanvasRaycastFilter
     public bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
     {
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, sp, eventCamera, out p);
-        return path.Length > 2 && ContainsPoint(pathCore);
+        return path.Count > 2 && ContainsPoint(pathCore);
     }
     //多边形顶点，屏幕点击坐标
     bool ContainsPoint(Vector2[] polyPoints)

@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 public class IrregularVertController : MonoBehaviour
 {
     [SerializeField]
-    public int index = 0;
+    public int idx = 0;
     private Vector4 m_vec = new Vector4(0.0f, 0.0f, 1f, 1f);
     [SerializeField]
     public Vector4 vec = new Vector4(0.0f, 0.0f, 1f, 1f);
@@ -28,9 +28,9 @@ public class IrregularVertController : MonoBehaviour
         if (m_vec != vec)
         {
             m_vec = vec;
-            if (index < img.path.Length && index >= 0)
+            if (idx < img.path.Count && idx >= 0)
             {
-                img.path[index] = m_vec;
+                img.path[idx] = m_vec;
                 img.doPolygonUpdate = true;
             }
         }
