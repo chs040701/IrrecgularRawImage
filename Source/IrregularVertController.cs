@@ -2,18 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+
+
+using RectPoint = IrregularRawImage.RectPoint;
 [RequireComponent(typeof(IrregularRawImage))]
 public class IrregularVertController : MonoBehaviour
 {
     [SerializeField]
     public int idx = 0;
-    private Vector4 m_vec = new Vector4(0.0f, 0.0f, 1f, 1f);
+    private Vector4 m_vec = Vector4.zero;
     [SerializeField]
-    public Vector4 vec = new Vector4(0.0f, 0.0f, 1f, 1f);
+    public Vector4 vec = Vector4.zero;
     IrregularRawImage m_img;
     void OnEnable()
     {
         m_img = transform.GetComponent<IrregularRawImage>();
+        if (idx < m_img.path.Count && idx >= 0)
+        {
+            m_vec = m_img.path[idx];
+        }
     }
     /// <summary>
     ///   <para>The RawImage texture coordinates.</para>
